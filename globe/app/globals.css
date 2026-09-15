@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+/*
+ * Bridge-display palette: near-black navy so it can sit next to radar / sonar
+ * screens at night, cyan graticule, red targets (schools), amber birds, white
+ * floating objects, green airframes.
+ */
+@theme {
+  --color-bg: #04070d;
+  --color-panel: #0a111d;
+  --color-panel-2: #0e1727;
+  --color-panel-3: #13203a;
+  --color-line: #1a2842;
+  --color-line-2: #24365a;
+  --color-text: #dbe7f3;
+  --color-muted: #8497ad;
+  --color-dim: #4f627a;
+  --color-accent: #3fd3ff;
+  --color-accent-2: #1fa8d2;
+  --color-target: #ff3b3b;
+  --color-target-2: #ff7a5c;
+  --color-birds: #ffb020;
+  --color-floating: #dbe7f3;
+  --color-drone: #46e0a0;
+  --color-ok: #46e0a0;
+  --color-warn: #ffb020;
+  --color-danger: #ff3b3b;
+
+  --font-sans:
+    var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", system-ui,
+    sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  overscroll-behavior: none;
+}
+
+body {
+  font-feature-settings: "tnum" 1;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 35%, transparent);
+}
+
+/* Instrument-style scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-2) transparent;
+}
+
+/* Fresh-target pulse ring drawn in SVG */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+.pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse-ring 2.2s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
+@keyframes selection-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.selection-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: selection-spin 9s linear infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.blink {
+  animation: blink 1.4s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.fade-in {
+  animation: fade-in 220ms ease-out both;
+}
+
+.panel-title {
+  @apply text-[10px] font-semibold uppercase tracking-[0.18em] text-muted;
+}
+
+.readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.hairline {
+  box-shadow: inset 0 0 0 1px var(--color-line);
+}
+
+.seg {
+  @apply inline-flex overflow-hidden rounded-md border border-line bg-panel text-[11px];
+}
+.seg > button {
+  @apply px-2.5 py-1 text-muted transition-colors hover:text-text;
+}
+.seg > button + button {
+  @apply border-l border-line;
+}
+.seg > button[aria-pressed="true"] {
+  @apply bg-panel-3 text-accent;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-md border border-line bg-panel-2 px-3 py-1.5 text-[12px] font-medium text-text transition-colors hover:bg-panel-3 disabled:cursor-not-allowed disabled:opacity-40;
+}
+.btn-primary {
+  @apply border-accent-2/60 bg-accent/10 text-accent hover:bg-accent/20;
+}
+.btn-danger {
+  @apply border-target/40 bg-target/10 text-target-2 hover:bg-target/20;
+}
+
+.tag {
+  @apply inline-flex items-center rounded px-1.5 py-[1px] text-[10px] font-semibold tracking-wider;
+}
